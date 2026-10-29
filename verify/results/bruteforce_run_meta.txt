@@ -1,0 +1,7 @@
+start 2026-10-29 07:06:25 EDT
+graph_sha256 9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485
+source_sha256 541a83313b5e78e9246953ea0f597db63db01f8f18fa2b475b795109b1056e44
+binary_sha256 37720b5518cc0592263f47a44a99cf32c40f0cf16b32d1f5901de6e2ae249273
+compiler Apple clang version 21.0.0 (clang-2100.0.123.102)
+command caffeinate -is bruteforce_kclique GRAPH 12 mathon797_1641.jsonl 8
+end 2026-10-29 09:01:30 EDT rc=0

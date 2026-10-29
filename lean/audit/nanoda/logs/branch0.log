@@ -1,0 +1,9 @@
+theorem RamseyIncrement.R1212.h01_chunk_0_ok :
+  forall (x : Nat),
+  Membership.mem RamseyIncrement.R1212.h01_chunk_0 x → Eq
+    (RamseyIncrement.R1212.Search.noClique RamseyIncrement.R1212.rowH (OfNat.ofNat 7) x) Bool.true :=
+  _
+
+axiom propext {a b : Prop} : Iff a b → Eq a b
+
+Checked 729 declarations with no errors

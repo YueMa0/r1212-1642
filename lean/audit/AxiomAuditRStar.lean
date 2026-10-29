@@ -1,0 +1,7 @@
+import RamseyIncrement.ThirdConnector.Theorem
+
+#print axioms RamseyIncrement.ThirdConnector.oldGraph_isRamseyFree
+#print axioms RamseyIncrement.ThirdConnector.blue_common_cliqueFree
+#print axioms RamseyIncrement.ThirdConnector.red_common_cliqueFree
+#print axioms RamseyIncrement.ThirdConnector.rstar_isRamseyFree
+#print axioms RamseyIncrement.SecondConnector.TypeA.plus_caseA_extension

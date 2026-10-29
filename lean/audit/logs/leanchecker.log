@@ -1,0 +1,16 @@
+RamseyIncrement.R1212.Paley exit=0 seconds=5 peak_MB=2194
+RamseyIncrement.R1212.Search exit=0 seconds=4 peak_MB=1020
+RamseyIncrement.R1212.H01Data exit=0 seconds=14 peak_MB=3542
+RamseyIncrement.R1212.H01Branch0 exit=0 seconds=101 peak_MB=6897
+RamseyIncrement.R1212.H01Branch1 exit=0 seconds=94 peak_MB=5694
+RamseyIncrement.R1212.H01Branch2 exit=0 seconds=105 peak_MB=6710
+RamseyIncrement.R1212.H01Branch3 exit=0 seconds=93 peak_MB=6443
+RamseyIncrement.R1212.H01Branch4 exit=0 seconds=90 peak_MB=5520
+RamseyIncrement.R1212.H01Branch5 exit=0 seconds=92 peak_MB=6138
+RamseyIncrement.R1212.H01Branch6 exit=0 seconds=80 peak_MB=4548
+RamseyIncrement.R1212.H01Branch7 exit=0 seconds=77 peak_MB=4665
+RamseyIncrement.R1212.H01NoK8 exit=0 seconds=5 peak_MB=1190
+RamseyIncrement.R1212.PaleyClique exit=0 seconds=9 peak_MB=2197
+RamseyIncrement.R1212.Mathon exit=0 seconds=4 peak_MB=2199
+RamseyIncrement.R1212.Main exit=0 seconds=5 peak_MB=2300
+control RamseyIncrement.R1212.NoSuchModule exit=1

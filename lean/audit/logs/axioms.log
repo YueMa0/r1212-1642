@@ -1,0 +1,9 @@
+'RamseyIncrement.R1212.h01_noK8' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.paley_cliqueFree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.mathon_isRamseyFree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.mathon797_isRamseyFree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.data797_P1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.data797_P2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.r1212_hasRamseyColoring' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RamseyIncrement.R1212.r1212_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+lake env lean ../../r1212_audit/AxiomAuditR1212.lean  0.95s user 0.90s system 102% cpu 1.790 total

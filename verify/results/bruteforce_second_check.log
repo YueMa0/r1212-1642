@@ -1,0 +1,107 @@
+# Second check of the brute-force verification (12.8), 2026-10-29. Scripts: scripts/independent/second_check/
+
+## 1. Lean evaluation of the Mathon definition (ExportMathon.lean)
+layout round trip: true
+C = [930, 926, 1573, 1338, 1479, 1483, 1492, 1582, 1586, 1595]
+I = [1061, 1588, 1576, 1549, 1554, 1594, 1472, 1557, 1079, 1267]
+
+## 2. Graph file vs Lean export and vs the brute-force log (check_file.py)
+sha256 9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485 | = run_meta: True | = candidate json: True
+bytes 2694522 | CR present: False | ends with newline: True
+rows 1641 | all rows length n and only 0/1: True
+diagonal all 0: True
+asymmetric pairs: 0
+red degree min/max: 25 1616 | blue degree min/max: 24 1615
+core 1596x1596 cells differing from Lean mathon: 0
+log records 3282 | distinct (v,c) 3282 | covers every v in 0..n-1 and c in {0,1}: True
+results: ['none'] | witness fields: 0
+logged |P| = recomputed |P(v,c)| (c=1 red) for 3282 of 3282
+total nodes 1.8879e+11, total CPU seconds 55026 (15.28 h)
+slowest tasks: [(0, 0, 822, 539188066, 146.449), (2, 1, 821, 525417512, 142.885), (1, 0, 820, 519707015, 142.62)]
+
+## 3. Rebuild and the program's own tests
+541a83313b5e78e9246953ea0f597db63db01f8f18fa2b475b795109b1056e44  verify/bruteforce_kclique.c
+37720b5518cc0592263f47a44a99cf32c40f0cf16b32d1f5901de6e2ae249273  verify/bin/bruteforce_kclique
+37720b5518cc0592263f47a44a99cf32c40f0cf16b32d1f5901de6e2ae249273  SCRATCH/bf/bruteforce_kclique
+rebuilt binary (clang -O3) is byte-identical to the one used
+random 2-colourings: 60 tested, failures: 0
+P101 126-vertex instance: K7 tasks 252 results ['none'] | K6 found: True
+planted K12 (undo c2x0), v=926: [(1, 'found', True), (0, 'none', None)]
+
+## 4. Controls on the real graph (controls.py)
+x0..x9, x* red to all 1576 core vertices: True
+a0..a9 blue to all core vertices: True
+
+[plant red] edge x0x1 has colour 0; flip it to 1
+  red K12 through v=0 after the flip (maxclique.c witness): [0, 64, 74, 78, 135, 636, 640, 676, 730, 1017, 1616, 1617] | is a clique: True
+  task (0,0) |P|=822: none nodes=539188066 (log: 539188066, equal: True) sec=121.367
+  task (0,1) |P|=818: found witness_ok=True witness=[0, 1531, 1555, 1396, 1259, 1390, 1159, 1352, 761, 258, 1617, 1616] | re-checked here: True sec=0.0
+  wall 121s
+
+[plant blue] edge a0a1 has colour 1; flip it to 0
+  blue K12 through v=0 after the flip (maxclique.c witness): [0, 3, 285, 423, 500, 766, 982, 1024, 1153, 1457, 1596, 1597] | is a clique: True
+  task (0,0) |P|=822: found witness_ok=True witness=[0, 1436, 813, 840, 1356, 1194, 1122, 868, 1454, 149, 1597, 1596] | re-checked here: True sec=0.0
+  task (0,1) |P|=818: none nodes=516222562 (log: 516222562, equal: True) sec=116.02
+  wall 116s
+
+[undo c2x0] tasks 1430 (v=926..1640), found 80, witness_ok all: True, re-checked here: True, wall 10s
+  first: v=926 c=1 witness=[926, 1562, 1640, 961, 1015, 1004, 1573, 1386, 1122, 1563, 1616, 1615]
+
+[undo i0x*] tasks 1430 (v=926..1640), found 69, witness_ok all: True, re-checked here: True, wall 9s
+  first: v=934 c=1 witness=[934, 977, 1580, 1463, 1640, 1061, 1364, 1051, 1590, 1129, 1626, 1615]
+
+[undo a1y0] tasks 1430 (v=926..1640), found 258, witness_ok all: True, re-checked here: True, wall 8s
+  first: v=929 c=0 witness=[929, 1399, 1252, 1394, 1627, 932, 1391, 1640, 1120, 1371, 1597, 1594]
+
+[rerun v=1..2] 4 tasks, wall 131s
+
+[rerun v=400..403] 8 tasks, wall 40s
+
+[rerun v=1000..1009] 20 tasks, wall 1s
+
+[rerun v=1300..1309] 20 tasks, wall 0s
+
+[rerun v=1630..1640] 22 tasks, wall 0s
+reruns identical to the log (result, |P|, nodes): 74 of 74
+exit=0
+
+## 5. Hidden planted K12s (hidden_plant.py)
+[hidden red K12 at v=0] 15 flips; planted extra vertices 1508,839; wall 134s
+  task (0,0) unchanged: none nodes=539188066 (log 539188066, equal: True)
+  task (0,1) |P|=818: found after 160095 nodes, 0.043s; witness_ok=True, re-checked here: True, same as planted: False
+[hidden blue K12 at v=0] 9 flips; planted extra vertices 474,310; wall 125s
+  task (0,0) |P|=822: found after 84287 nodes, 0.019s; witness_ok=True, re-checked here: True, same as planted: False
+  task (0,1) unchanged: none nodes=516222562 (log 516222562, equal: True)
+[hidden red K12 at v=1] 9 flips; planted extra vertices 912,103; wall 120s
+  task (1,0) unchanged: none nodes=519707015 (log 519707015, equal: True)
+  task (1,1) |P|=819: found after 21563 nodes, 0.006s; witness_ok=True, re-checked here: True, same as planted: False
+[hidden blue K12 at v=1] 10 flips; planted extra vertices 964,1266; wall 114s
+  task (1,0) |P|=820: found after 158728 nodes, 0.026s; witness_ok=True, re-checked here: True, same as planted: False
+  task (1,1) unchanged: none nodes=518650498 (log 518650498, equal: True)
+exit=0
+
+## 6. Cross-check with maxclique.c (mc_cross.py)
+task (0,0) |P|=822 (log 822, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 539770579 [122s]
+task (2,1) |P|=821 (log 821, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 525428964 [119s]
+task (276,1) |P|=675 (log 675, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 112931709 [26s]
+task (118,1) |P|=758 (log 758, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 275485823 [63s]
+task (535,1) |P|=559 (log 559, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 26586438 [6s]
+task (392,1) |P|=623 (log 623, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 63330946 [14s]
+task (817,0) |P|=412 (log 412, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 4527259 [1s]
+task (738,1) |P|=452 (log 452, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 4582657 [1s]
+task (975,1) |P|=325 (log 325, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 845431 [0s]
+task (1018,0) |P|=315 (log 315, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 612933 [0s]
+task (1330,1) |P|=160 (log 160, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 9051 [0s]
+task (1499,0) |P|=68 (log 68, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 21 [0s]
+task (1562,0) |P|=38 (log 38, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 1 [0s]
+task (1580,1) |P|=28 (log 28, brute force none): maxclique -> target 11: none | omega <= 10 | nodes 1 [0s]
+task (817,0) |P|=412 (log 412, brute force none): maxclique -> omega 10 witness 252 369 144 308 264 130 362 236 410 406 | nodes 4527262 [1s]
+task (975,1) |P|=325 (log 325, brute force none): maxclique -> omega 10 witness 284 260 46 9 24 95 191 180 320 309 | nodes 845435 [0s]
+task (1018,0) |P|=315 (log 315, brute force none): maxclique -> omega 10 witness 140 306 121 118 55 187 37 262 232 311 | nodes 612936 [0s]
+task (1330,1) |P|=160 (log 160, brute force none): maxclique -> omega 10 witness 158 66 114 59 63 12 112 37 118 143 | nodes 9073 [0s]
+task (1499,0) |P|=68 (log 68, brute force none): maxclique -> omega 9 witness 19 20 14 38 40 17 1 48 64 | nodes 73 [0s]
+task (1562,0) |P|=38 (log 38, brute force none): maxclique -> omega 7 witness 37 35 36 33 11 14 34 | nodes 64 [0s]
+task (1580,1) |P|=28 (log 28, brute force none): maxclique -> omega 6 witness 27 21 8 2 4 7 | nodes 6 [0s]
+exit=0
+
+## 7. Independent code review: see scripts/independent/second_check/review/review_report.md

@@ -1,0 +1,13 @@
+theorem RamseyIncrement.R1212.rowH_spec :
+  forall (i : Nat),
+  LT.lt i (OfNat.ofNat 198) → (forall (j : Nat),
+  LT.lt j (OfNat.ofNat 198) → Eq (Nat.testBit (RamseyIncrement.R1212.rowH i) j)
+    (Bool.and (bne i j)
+      (RamseyIncrement.R1212.qrB
+        (HMod.hMod (HSub.hSub (HAdd.hAdd (RamseyIncrement.R1212.vtx i) (OfNat.ofNat 797)) (RamseyIncrement.R1212.vtx j))
+          (OfNat.ofNat 797))))) :=
+  _
+
+axiom propext {a b : Prop} : Iff a b → Eq a b
+
+Checked 661 declarations with no errors

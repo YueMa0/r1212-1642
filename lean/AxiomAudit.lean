@@ -1,0 +1,4 @@
+import RamseyIncrement
+
+#print axioms RamseyIncrement.ramsey_increment_plus
+#print axioms RamseyIncrement.ramsey_increment_plus_symmetric

@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this colouring or the Lean proof, please cite it as below, together with Tatarevic's paper."
+title: "R(12,12) ≥ 1642: a colouring of K_1641, a Lean proof and computer checks"
+authors:
+  - family-names: Ma
+    given-names: Yue
+version: 1.0.0
+date-released: 2026-10-29
+license: MIT
+repository-code: "https://github.com/YueMa0/r1212-1642"
+abstract: "A red/blue colouring of the complete graph on 1641 vertices with no monochromatic K_12, so R(12,12) ≥ 1642. It adds one vertex to Tatarevic's two-parameter Ramsey increment applied to the Mathon colouring M(797). Includes a Lean 4 proof accepted by two independent kernels and an exhaustive computer search. The work was done with Claude (Claude Opus 5.5, Anthropic); see the README."
+keywords:
+  - Ramsey numbers
+  - lower bounds
+  - Lean 4
+  - formal verification
+references:
+  - type: article
+    authors:
+      - family-names: Tatarevic
+        given-names: Milos
+    title: "A constructive two-parameter Ramsey increment"
+    year: 2026
+    url: "https://arxiv.org/abs/2608.06531"
+  - type: software
+    authors:
+      - family-names: Tatarevic
+        given-names: Milos
+    title: "ramsey-increment-theorem"
+    repository-code: "https://github.com/milostatarevic/ramsey-increment-theorem"
+    commit: 36c15eca0c601be7b7f33e30ee6890f395d2e1ea

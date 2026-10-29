@@ -1,0 +1,35 @@
+# Building and auditing the Lean proof
+
+All commands are run from lean/.
+
+| File | Purpose |
+|---|---|
+| build_r1212.sh | fetch the Mathlib cache, build the eight H01Branch modules one at a time, build the rest, print the axioms |
+| AxiomAuditR1212.lean | `#print axioms` for the final theorem and its main steps: `lake env lean audit/AxiomAuditR1212.lean` |
+| AxiomAuditRStar.lean | the same for rule R* (`rstar_isRamseyFree`) |
+| DependencyModules.lean | lists the modules of this repository whose constants the final theorem uses |
+| leanchecker_r1212.sh | leanchecker replay of the 23 new modules, one per run, plus a control |
+| leanchecker_upstream.sh | leanchecker replay of the 43 modules of Tatarevic's library, one per run |
+| sources.sha256 | SHA-256 of the new Lean sources and of the generator |
+| nanoda/ | the check with nanoda, an independent kernel |
+
+Comments in lean/RamseyIncrement/ThirdConnector/ cite the report by its earlier file name, 02_expert_report.md. The sections they cite are unchanged in report/r1212_report.md. The Lean files are left exactly as they were audited (sources.sha256).
+
+## Memory
+
+Each H01Branch module needs 4–7 GB in the Lean kernel, during both compilation and replay. Lake compiles independent modules in parallel and leanchecker replays the modules it is given in parallel, so both are run one module at a time here. With 16 GB of memory, running eight branch modules at once made the machine swap heavily.
+
+## Logs (lean/audit/logs/)
+
+These are from runs on 29 October 2026, on an Apple M4 Mac mini with 16 GB of memory.
+
+| Log | Contents |
+|---|---|
+| axioms.log | output of AxiomAuditR1212.lean: every theorem depends only on propext, Classical.choice, Quot.sound |
+| build_branches.log | build time and approximate peak memory of H01Branch1 to H01Branch7 (H01Branch0: 101 s, about 6 GB) |
+| leanchecker.log | replay of the 15 R1212 modules: all exit 0. The last line is a control: a missing module exits 1 |
+| leanchecker_thirdconnector.log | replay of the 8 ThirdConnector modules: empty, so no errors |
+| leanchecker_author.log | replay of the 43 upstream modules: all exit 0 |
+| dependency_modules.log | the final theorem uses 30,595 constants (with Mathlib), from 54 modules of this repository: 15 in R1212, 8 in ThirdConnector, 31 of Tatarevic's |
+
+The runs used the same sources as this repository; see sources.sha256.

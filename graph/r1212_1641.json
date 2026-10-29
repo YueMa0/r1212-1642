@@ -1,0 +1,137 @@
+{
+ "file": "r1212_1641.graph",
+ "n": 1641,
+ "sha256": "9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485",
+ "format": "n lines of n characters; character w of line v is 1 iff the edge vw is red (no complement)",
+ "claim": "no red K12 and no blue K12, so R(12,12) >= 1642",
+ "input": "the Mathon graph M(797) on vertices 0..1595: A_x = x, B_x = 797 + x (x in Z/797), a = 1594, b = 1595",
+ "vertex_order": "0..796 A, 797..1593 B, 1594 a, 1595 b (doubling), then a0..a9, b0..b9, x0..x9, x*, y0..y9, y*, z, w, u",
+ "certificates": {
+  "C": [
+   930,
+   926,
+   1573,
+   1338,
+   1479,
+   1483,
+   1492,
+   1582,
+   1586,
+   1595
+  ],
+  "I": [
+   1061,
+   1588,
+   1576,
+   1549,
+   1554,
+   1594,
+   1472,
+   1557,
+   1079,
+   1267
+  ],
+  "type": "A",
+  "orientation": "as built (not complemented)"
+ },
+ "rule": {
+  "anchor": "i0",
+  "colours": {
+   "c0": 1,
+   "a0": 1,
+   "b0": 1,
+   "c1": 1,
+   "a1": 0,
+   "b1": 1,
+   "c2": 1,
+   "a2": 1,
+   "b2": 0,
+   "c3": 1,
+   "a3": 0,
+   "b3": 1,
+   "c4": 1,
+   "a4": 1,
+   "b4": 1,
+   "c5": 1,
+   "a5": 0,
+   "b5": 1,
+   "c6": 1,
+   "a6": 1,
+   "b6": 1,
+   "c7": 1,
+   "a7": 0,
+   "b7": 1,
+   "c8": 1,
+   "a8": 1,
+   "b8": 1,
+   "c9": 1,
+   "a9": 0,
+   "b9": 1,
+   "i0": 1,
+   "i1": 0,
+   "i2": 0,
+   "i3": 0,
+   "i4": 0,
+   "i5": 0,
+   "i6": 0,
+   "i7": 0,
+   "i8": 0,
+   "i9": 0,
+   "x0": 1,
+   "y0": 0,
+   "x1": 0,
+   "y1": 0,
+   "x2": 0,
+   "y2": 0,
+   "x3": 0,
+   "y3": 0,
+   "x4": 0,
+   "y4": 0,
+   "x5": 0,
+   "y5": 0,
+   "x6": 0,
+   "y6": 0,
+   "x7": 0,
+   "y7": 0,
+   "x8": 0,
+   "y8": 0,
+   "x9": 0,
+   "y9": 0,
+   "x*": 1,
+   "y*": 1,
+   "z": 0,
+   "w": 0
+  },
+  "flips": [
+   [
+    "c2",
+    "x0"
+   ],
+   [
+    "i0",
+    "x*"
+   ],
+   [
+    "a1",
+    "y0"
+   ],
+   [
+    "a3",
+    "y0"
+   ],
+   [
+    "a5",
+    "y0"
+   ],
+   [
+    "a7",
+    "y0"
+   ],
+   [
+    "a9",
+    "y0"
+   ]
+  ]
+ },
+ "verification": "see README.md: Lean proof (Lean 4.32.1 kernel, leanchecker, nanoda) and exhaustive clique search (verify/)"
+}

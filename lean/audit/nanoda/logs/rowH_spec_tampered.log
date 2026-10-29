@@ -1,0 +1,22 @@
+
+thread 'main' (89602) panicked at src/tc.rs:984:71:
+assertion failed: self.def_eq(u, v)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+        0.03 real         0.02 user         0.00 sys
+            11091968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                 837  page reclaims
+                   6  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                  36  involuntary context switches
+           429568304  instructions retired
+           110434604  cycles elapsed
+             9896296  peak memory footprint

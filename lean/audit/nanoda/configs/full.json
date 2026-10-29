@@ -1,0 +1,24 @@
+{
+  "export_file_path": "export/r1212_lower_bound.ndjson",
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "unpermitted_axiom_hard_error": true,
+  "nat_extension": true,
+  "string_extension": true,
+  "num_threads": 2,
+  "pp_declars": [
+    "RamseyIncrement.R1212.r1212_lower_bound",
+    "RamseyIncrement.ramseyNumber",
+    "RamseyIncrement.ForcesRamsey",
+    "RamseyIncrement.HasRamseyColoring",
+    "RamseyIncrement.IsRamseyFree",
+    "SimpleGraph.CliqueFree",
+    "SimpleGraph.IsNClique",
+    "SimpleGraph.IsClique"
+  ],
+  "pp_to_stdout": true,
+  "print_success_message": true
+}

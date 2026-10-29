@@ -1,0 +1,116 @@
+### 1. M(797), neighbourhood lemma, certificates
+sha256 9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485
+file: 1641x1641, symmetric, zero diagonal; red density 0.4997332084838216
+file block 0..1595 equals M(797): True | differing pairs: 0
+x -> 4x+0 on both copies is an automorphism: True
+x -> 1x+1 on both copies is an automorphism: True
+swap A<->B, a<->b is an automorphism: True
+N_red(A_0) as expected: True | iso to P_797 via a->0, A_x->1/x, B_y->1/y: True
+N_blue(A_0) as expected: True | B_0 red to rest of N_blue(A_0): True | blue graph on the rest iso to P_797 via b->0, A_x->n/x, B_y->n/y: True
+N_red(a) = A: True | N_blue(a) = B+{b}: True | b red to all of B: True | blue graph on B iso to P_797 via B_x->n*x: True
+C red K10: True | I blue K10: True
+  c0 R.R...RR.R
+  c1 RR..R..RR.
+  c2 .R.R...RR.
+  c3 RRR.R...RR
+  c4 RR.....RR.
+  c5 R.RRR.RR.R
+  c6 RRRRR...RR
+  c7 RRR...RRRR
+  c8 R.R.......
+  c9 RRRRR.RRRR
+Type A: True | P = beta(i0) = [2] | (P1) P=={2}: True | (P2) c2 red to i_r, r>=2: [3, 7, 8]
+common red nbhd of 0,1: 198 | common blue nbhd of 0,2: 198
+report's red 9-clique witness in P_797 is valid: True
+report's blue 9-clique witness in P_797 is valid: True
+### 2. clique search vs networkx
+random graphs: 300 tested, mismatches: 0
+P_5: omega 2 (networkx 2)
+P_13: omega 3 (networkx 3)
+P_17: omega 3 (networkx 3)
+P_29: omega 4 (networkx 4)
+P_37: omega 4 (networkx 4)
+P_41: omega 5 (networkx 5)
+P_53: omega 5 (networkx 5)
+P_61: omega 5 (networkx 5)
+P_73: omega 5
+P_89: omega 5
+P_97: omega 6
+P_101: omega 5
+P_109: omega 6
+P_113: omega 7
+### 3. omega(P_797): maximum clique in the 198-vertex common neighbourhoods (must be 7)
+omega 7 witness 194 133 134 146 131 111 126
+nodes 71387
+omega 7 witness 191 88 44 3 68 196 180
+nodes 71503
+### 4. projection check on the 1641-vertex graph
+sha256 9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485
+core size 20; |V0| = 1576
+  const blue  : a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 y*
+  copy c0     : b0 z
+  copy c1     : b1
+  copy c2     : b2
+  copy c3     : b3
+  copy c4     : b4
+  copy c5     : b5
+  copy c6     : b6
+  copy c7     : b7
+  copy c8     : b8
+  copy c9     : b9
+  const red   : x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x*
+  copy i0     : y0 w u
+  copy i1     : y1
+  copy i2     : y2
+  copy i3     : y3
+  copy i4     : y4
+  copy i5     : y5
+  copy i6     : y6
+  copy i7     : y7
+  copy i8     : y8
+  copy i9     : y9
+[red] largest red clique inside the 65 core+new vertices: 11 (ok)
+[red] maximal cliques checked: 8773; slack histogram {0: 8773}
+[red] tightest: slack 0 at ['i5', 'y5']
+[red] unresolved (slack < 0): 0
+[blue] largest blue clique inside the 65 core+new vertices: 11 (ok)
+[blue] maximal cliques checked: 7998; slack histogram {0: 7983, 1: 15}
+[blue] tightest: slack 0 at ['a4', 'c2', 'i0', 'i2', 'i4', 'i6', 'i9', 'y5']
+[blue] unresolved (slack < 0): 0
+RESULT: no monochromatic K12 (given G is (11,11))
+### 5. negative control: undo flip 1573:1616 (must FAIL)
+PERTURBED: flipped edge 1573-1616 to red
+[red] largest red clique inside the 65 core+new vertices: 12 (FAIL)
+[red] unresolved (slack < 0): 131
+[blue] largest blue clique inside the 65 core+new vertices: 11 (ok)
+[blue] unresolved (slack < 0): 0
+RESULT: 132 unresolved
+### 5. negative control: undo flip 1061:1626 (must FAIL)
+PERTURBED: flipped edge 1061-1626 to red
+[red] largest red clique inside the 65 core+new vertices: 12 (FAIL)
+[red] unresolved (slack < 0): 129
+[blue] largest blue clique inside the 65 core+new vertices: 11 (ok)
+[blue] unresolved (slack < 0): 0
+RESULT: 130 unresolved
+### 5. negative control: undo flip 1597:1627 (must FAIL)
+PERTURBED: flipped edge 1597-1627 to blue
+[red] largest red clique inside the 65 core+new vertices: 11 (ok)
+[red] unresolved (slack < 0): 0
+[blue] largest blue clique inside the 65 core+new vertices: 12 (FAIL)
+[blue] unresolved (slack < 0): 3
+RESULT: 4 unresolved
+### 6. projection vs brute force on the 126-vertex P101 instance
+V-block equals P_101 (as labelled): True
+core from labels: ['c0', 'c1', 'c2', 'c3', 'c4', 'i0', 'i1', 'i2', 'i3', 'i4'] | new: ['a0', 'a1', 'a2', 'a3', 'a4', 'b0', 'b1', 'b2', 'b3', 'b4', 'x0', 'x1', 'x2', 'x3', 'x4', 'x*', 'y0', 'y1', 'y2', 'y3', 'y4', 'y*', 'z', 'w', 'u']
+core size after growth: 10
+[red] projection: omega inside Sigma 6, maximal cliques 272, unresolved 0
+[blue] projection: omega inside Sigma 6, maximal cliques 262, unresolved 0
+projection verdict: (7,7)-graph
+[red] brute force on all 126 vertices: omega 6 witness 119 6 5 1 83 82
+[blue] brute force on all 126 vertices: omega 6 witness 81 110 70 42 88 99
+### 7. rebuild the colouring from the text of report/r1212_report.md and compare
+rebuilt sha256   9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485
+candidate sha256 9550a1745bfa46e595b24bc44f279aed86199c72d8f6e5483080296055c8e485
+identical: True | differing pairs: 0
+T = [0, 2, 6, 7, 9] | P = [2] | Q = [3, 4, 5, 6, 7, 8, 9]
+PY=python3.14 CC=clang WORK="$W" ./verify/run_checks.sh  35.97s user 1.22s system 97% cpu 37.962 total
