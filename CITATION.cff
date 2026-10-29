@@ -6,6 +6,14 @@ authors:
     given-names: Yue
 version: 1.0.0
 date-released: 2026-10-29
+doi: 10.5281/zenodo.23770924
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23770924
+    description: "All versions (Zenodo concept DOI)"
+  - type: doi
+    value: 10.5281/zenodo.23770925
+    description: "Version 1.0.0"
 license: MIT
 repository-code: "https://github.com/YueMa0/r1212-1642"
 abstract: "A red/blue colouring of the complete graph on 1641 vertices with no monochromatic K_12, so R(12,12) ≥ 1642. It adds one vertex to Tatarevic's two-parameter Ramsey increment applied to the Mathon colouring M(797). Includes a Lean 4 proof accepted by two independent kernels and an exhaustive computer search. The work was done with Claude (Claude Opus 5.5, Anthropic); see the README."

@@ -1,5 +1,7 @@
 # R(12,12) ≥ 1642
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23770924.svg)](https://doi.org/10.5281/zenodo.23770924)
+
 This repository contains a red/blue colouring of the complete graph K₁₆₄₁ with no monochromatic K₁₂, and a Lean 4 proof that R(12,12) ≥ 1642.
 
 To our knowledge this improves the best published lower bound, R(12,12) ≥ 1641 (M. Tatarevic, [arXiv:2608.06531](https://arxiv.org/abs/2608.06531), August 2026). The literature search was made on 29 October 2026. The result has not been peer reviewed.
@@ -85,7 +87,7 @@ Do not start with a bare `lake build RamseyIncrement.R1212.Main`: Lake would com
 
 ## How to cite
 
-Citation metadata is in [CITATION.cff](CITATION.cff); GitHub shows it under "Cite this repository". Please cite Tatarevic's paper as well: M. Tatarevic, *A constructive two-parameter Ramsey increment*, [arXiv:2608.06531](https://arxiv.org/abs/2608.06531).
+Version 1.0.0 is archived on Zenodo: [doi:10.5281/zenodo.23770925](https://doi.org/10.5281/zenodo.23770925). To cite all versions, use [doi:10.5281/zenodo.23770924](https://doi.org/10.5281/zenodo.23770924). Citation metadata is in [CITATION.cff](CITATION.cff); GitHub shows it under "Cite this repository". Please cite Tatarevic's paper as well: M. Tatarevic, *A constructive two-parameter Ramsey increment*, [arXiv:2608.06531](https://arxiv.org/abs/2608.06531).
 
 ## License
 
