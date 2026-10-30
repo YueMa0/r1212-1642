@@ -33,7 +33,9 @@ while IFS= read -r file; do
   module=${file%.lean}
   discovered+=("${module//\//.}")
 done < "$files"
-if [[ "${modules[*]}" != "${discovered[*]}" ]]; then
+# The `-` default matters on bash 3.2 (macOS): there `set -u` rejects an empty array,
+# and the EXIT trap above would then turn the error into exit status 0.
+if [[ "${modules[*]}" != "${discovered[*]-}" ]]; then
   echo "FAIL  upstream module set differs from the expected 43 (${#discovered[@]} found)" >&2
   exit 1
 fi
