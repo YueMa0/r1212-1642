@@ -1,16 +1,50 @@
 #!/usr/bin/env bash
-# Replay the 43 modules of Tatarevic's library through leanchecker, one module per run.
-set -uo pipefail
+# Replay exactly the 43 upstream modules, one module per run.
+set -euo pipefail
+export LC_ALL=C
 cd "$(dirname "$0")/.."
 
+# An empty/partial/failed enumeration must not become a successful empty audit.
+modules=()
+previous=''
+while IFS= read -r module || [[ -n "$module" ]]; do
+  if [[ ! "$module" =~ ^RamseyIncrement\.[A-Za-z0-9_.]+$ ]] ||
+     [[ -n "$previous" && ! "$previous" < "$module" ]]; then
+    echo "FAIL  invalid, duplicate or unsorted upstream module: $module" >&2
+    exit 1
+  fi
+  modules+=("$module")
+  previous=$module
+done < audit/upstream_modules.txt
+if [[ ${#modules[@]} -ne 43 ]]; then
+  echo "FAIL  expected 43 upstream modules, got ${#modules[@]}" >&2
+  exit 1
+fi
+
+files=$(mktemp)
+trap 'rm -f -- "$files"' EXIT
+if ! find RamseyIncrement -type f -name '*.lean' \
+    -not -path '*/R1212/*' -not -path '*/ThirdConnector/*' | sort > "$files"; then
+  echo 'FAIL  upstream module enumeration failed' >&2
+  exit 1
+fi
+discovered=()
+while IFS= read -r file; do
+  module=${file%.lean}
+  discovered+=("${module//\//.}")
+done < "$files"
+if [[ "${modules[*]}" != "${discovered[*]}" ]]; then
+  echo "FAIL  upstream module set differs from the expected 43 (${#discovered[@]} found)" >&2
+  exit 1
+fi
+
 status=0
-while IFS= read -r f; do
-  m=$(echo "$f" | sed -e 's/\.lean$//' -e 's|/|.|g')
-  if lake env leanchecker "$m"; then
-    echo "ok    $m"
+for module in "${modules[@]}"; do
+  if lake env leanchecker "$module"; then
+    echo "ok    $module"
   else
-    echo "FAIL  $m"
+    echo "FAIL  $module" >&2
     status=1
   fi
-done < <(find RamseyIncrement -name '*.lean' -not -path '*/R1212/*' -not -path '*/ThirdConnector/*' | sort)
-exit $status
+done
+exit "$status"

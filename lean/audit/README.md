@@ -4,16 +4,18 @@ All commands are run from lean/.
 
 | File | Purpose |
 |---|---|
-| build_r1212.sh | fetch the Mathlib cache, build the eight H01Branch modules one at a time, build the rest, print the axioms |
+| build_r1212.sh | fetch the Mathlib cache, build the eight H01Branch modules one at a time, build the default target including R1212.Main, print the axioms |
 | AxiomAuditR1212.lean | `#print axioms` for the final theorem and its main steps: `lake env lean audit/AxiomAuditR1212.lean` |
 | AxiomAuditRStar.lean | the same for rule R* (`rstar_isRamseyFree`) |
 | DependencyModules.lean | lists the modules of this repository whose constants the final theorem uses |
 | leanchecker_r1212.sh | leanchecker replay of the 23 new modules, one per run, plus a control |
-| leanchecker_upstream.sh | leanchecker replay of the 43 modules of Tatarevic's library, one per run |
-| sources.sha256 | SHA-256 of the new Lean sources and of the generator |
+| leanchecker_upstream.sh | require successful enumeration matching upstream_modules.txt exactly, then replay all 43 upstream modules one per run |
+| sources.sha256 | SHA-256 of the new Lean sources, integration entry points and generator |
 | nanoda/ | the check with nanoda, an independent kernel |
 
-Comments in lean/RamseyIncrement/ThirdConnector/ cite the report by its earlier file name, 02_expert_report.md. The sections they cite are unchanged in report/r1212_report.md. The Lean files are left exactly as they were audited (sources.sha256).
+Comments in lean/RamseyIncrement/ThirdConnector/ cite the report by its earlier file name, 02_expert_report.md. The sections they cite are unchanged in report/r1212_report.md. The mathematical Lean modules are left exactly as they were audited. The root entry point and default axiom audit now also include the final R1212 theorem; UPSTREAM.md records those integration changes. sources.sha256 tracks the unchanged new mathematical modules and the current generator; its I/O fixes do not change any generated Lean text.
+
+The default library build now reaches R1212.Main. On a fresh checkout, use build_r1212.sh to compile the large branches serially before building that target. The lightweight CI checks audit coverage and failure handling with a fake Lake command; it does not claim a fresh Lean kernel replay.
 
 ## Memory
 

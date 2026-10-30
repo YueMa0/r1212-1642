@@ -6,23 +6,30 @@
 3. Brute force: exact maximum clique of the whole graph in both colours with the C program.
 """
 import json
-import subprocess
+from pathlib import Path
+import runpy
 import sys
 
 import networkx as nx
 import numpy as np
 
+run_solver = runpy.run_path(str(Path(__file__).with_name("check_maxclique.py")))["run_solver"]
+
 path, binary, tmp = sys.argv[1], sys.argv[2], sys.argv[3]
-m = json.load(open(path))
+m = json.loads(Path(path).read_text(encoding="utf-8"))
 n, labels = m["n"], m["labels"]
 rows = [int(h, 16) for h in m["adjacency_hex"]]
 O = np.array([[(rows[i] >> j) & 1 for j in range(n)] for i in range(n)], dtype=np.uint8)
-assert (O == O.T).all() and not np.diag(O).any(), "bit order / symmetry"
+if not (O == O.T).all() or np.diag(O).any():
+    raise SystemExit("CHECK FAILED: bit order / symmetry")
 nV, wG = 101, 5
 q = 101
 sq = {x * x % q for x in range(1, q)}
 P = np.array([[1 if (i - j) % q in sq else 0 for j in range(q)] for i in range(q)], dtype=np.uint8)
-print("V-block equals P_101 (as labelled):", bool((O[:nV, :nV] == P).all()))
+block_ok = bool((O[:nV, :nV] == P).all())
+print("V-block equals P_101 (as labelled):", block_ok)
+if not block_ok:
+    raise SystemExit("CHECK FAILED: V-block is not P_101")
 V, F = list(range(nV)), list(range(nV, n))
 core = {i for i, l in enumerate(labels[:nV]) if l[0] in "ci" and l[1:].isdigit()}
 print("core from labels:", sorted(labels[i] for i in core), "| new:", [labels[f] for f in F])
@@ -76,9 +83,12 @@ print("projection verdict:", "(7,7)-graph" if ok else "not proved")
 
 for c, cname in [(1, "red"), (0, "blue")]:
     A = O if c else (1 - O) * (1 - np.eye(n, dtype=np.uint8))
-    with open(tmp, "w") as fh:
+    with open(tmp, "w", encoding="ascii", newline="\n") as fh:
         fh.write(f"{n}\n")
         for r in A:
             fh.write("".join(map(str, r)) + "\n")
-    out = subprocess.run([binary, tmp], capture_output=True, text=True, check=True).stdout
-    print(f"[{cname}] brute force on all {n} vertices:", out.split("\n")[0])
+    omega, exact = run_solver(binary, tmp, A)
+    print(f"[{cname}] brute force on all {n} vertices: omega {omega}")
+    ok &= exact and omega == 6
+print("RESULT:", "PASS" if ok else "FAIL")
+sys.exit(0 if ok else 1)

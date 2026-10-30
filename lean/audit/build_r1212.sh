@@ -12,5 +12,6 @@ for i in 0 1 2 3 4 5 6 7; do
   echo "== RamseyIncrement.R1212.H01Branch$i"
   lake build "RamseyIncrement.R1212.H01Branch$i"
 done
-lake build RamseyIncrement.R1212.Main
+# Exercise the default target too: it must include the final R1212 theorem.
+lake build
 lake env lean audit/AxiomAuditR1212.lean

@@ -8,10 +8,28 @@ These programs read graph/r1212_1641.graph and use none of the Lean code. Python
 PY=python3 verify/run_checks.sh
 ```
 
+Every check must succeed for the script to exit 0. The two P797 common-neighbourhood
+searches must report an exact clique number of 7 with a valid witness. Each negative
+control must exit 1 **and** print a nonzero unresolved count and `CHECK: FAIL`; a crash,
+missing output, or an unexpected success fails the run. Projection remains conditional
+on the separately checked (11,11) property of M(797).
+
+The Python checkers and solver tests also exit nonzero on failed verdicts, mismatches,
+incomplete task coverage, malformed solver output, or invalid witnesses.
+Reconstruction refuses an output path referring to the candidate itself (including
+hard links), so the comparison cannot overwrite its input. To run the
+regression controls (temporary graph mutations and simulated solver errors, no full
+1641-vertex exhaustive search):
+
+```bash
+python3 -m unittest discover -s verify -p 'test_check_contracts.py'
+```
+
 | Script | What it checks |
 |---|---|
 | check_mathon.py | the first 1596 vertices are M(797); the neighbourhood lemma via explicit automorphisms and isomorphisms; the certificates (red K₁₀, blue K₁₀, Type A, (P1), (P2)) |
 | maxclique.c, test_maxclique.py | an exact maximum-clique search, tested against networkx; it finds clique number 7 in both 198-vertex common neighbourhoods of P₇₉₇, so ω(P₇₉₇) = α(P₇₉₇) = 9 |
+| check_maxclique.py | validates solver output and its witness, and requires a specified exact clique number |
 | check_projection.py | the clone projection: no monochromatic K₁₂, given that M(797) is an (11,11)-colouring. With an argument u:v it flips the edge uv; undoing any flip of R* must make the check fail |
 | crosscheck_p101.py | the projection agrees with brute force on a 126-vertex instance built from the Paley graph P₁₀₁ (data/) |
 | rebuild_from_report.py | rebuilds the colouring from the text of the report (Sections 1.1, 1.2, 2, Appendices A, B) and compares it byte for byte |

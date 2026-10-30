@@ -15,6 +15,7 @@ Method (clone projection):
   maximal cliques of (Sigma minus the constant-not-c vertices); plus omega_c(Sigma) <= 11.
 """
 import hashlib
+from pathlib import Path
 import sys
 from functools import lru_cache
 
@@ -22,13 +23,21 @@ import networkx as nx
 import numpy as np
 
 path = sys.argv[1]
-raw = open(path, "rb").read()
+raw = Path(path).read_bytes()
 print("sha256", hashlib.sha256(raw).hexdigest())
-O = np.array([np.frombuffer(l, dtype=np.uint8) - 48 for l in raw.split(b"\n")[:-1]], dtype=np.uint8)
+lines = raw.split(b"\n")
+if (len(lines) != 1642 or lines[-1] != b""
+        or any(len(row) != 1641 or set(row) - {48, 49} for row in lines[:-1])):
+    raise SystemExit("CHECK FAILED: expected 1641 binary LF-terminated rows of length 1641")
+O = np.array([np.frombuffer(l, dtype=np.uint8) - 48 for l in lines[:-1]], dtype=np.uint8)
+if not (O == O.T).all() or np.diag(O).any():
+    raise SystemExit("CHECK FAILED: expected a symmetric graph with zero diagonal")
 n, nV = O.shape[0], 1596
 V, F = list(range(nV)), list(range(nV, n))
 for spec in sys.argv[2:]:  # perturbations for negative controls: u:v flips the colour of edge uv
     u_, v_ = map(int, spec.split(":"))
+    if not (0 <= u_ < n and 0 <= v_ < n and u_ != v_):
+        raise SystemExit("CHECK FAILED: perturbation must name two distinct vertices in range")
     O[u_, v_] = O[v_, u_] = 1 - O[u_, v_]
     print(f"PERTURBED: flipped edge {u_}-{v_} to {'red' if O[u_, v_] else 'blue'}")
 
@@ -121,9 +130,11 @@ for c, cname in [(1, "red"), (0, "blue")]:
         if slack < 0:
             bad.append(K)
     print(f"[{cname}] maximal cliques checked: {count}; slack histogram {dict(sorted(hist.items()))}")
-    print(f"[{cname}] tightest: slack {worst[0]} at {sorted(role[v] for v in worst[1])}")
+    print(f"[{cname}] tightest: slack {worst[0]} at {sorted(role.get(v, str(v)) for v in worst[1])}")
     print(f"[{cname}] unresolved (slack < 0): {len(bad)}")
     for K in bad[:10]:
-        print("    ", sorted(role[v] for v in K))
+        print("    ", sorted(role.get(v, str(v)) for v in K))
     total_bad += len(bad)
 print("RESULT:", "no monochromatic K12 (given G is (11,11))" if total_bad == 0 else f"{total_bad} unresolved")
+print("CHECK:", "PASS" if total_bad == 0 else "FAIL")
+sys.exit(0 if total_bad == 0 else 1)

@@ -2,3 +2,4 @@ import RamseyIncrement
 
 #print axioms RamseyIncrement.ramsey_increment_plus
 #print axioms RamseyIncrement.ramsey_increment_plus_symmetric
+#print axioms RamseyIncrement.R1212.r1212_lower_bound

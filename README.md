@@ -65,7 +65,9 @@ lean/audit/leanchecker_r1212.sh
 lean/audit/leanchecker_upstream.sh
 ```
 
-Do not start with a bare `lake build RamseyIncrement.R1212.Main`: Lake would compile the eight H01Branch modules in parallel, at 4–7 GB each. The build script compiles them one at a time. For nanoda, see lean/audit/nanoda/README.md.
+The default `lake build` target now includes `RamseyIncrement.R1212.Main`, and `AxiomAudit.lean` also prints the axioms of the final lower-bound theorem. On a fresh checkout, use the build script above instead of a bare `lake build` or `lake build RamseyIncrement.R1212.Main`: Lake would compile the eight H01Branch modules in parallel, at 4–7 GB each. The script builds them one at a time before building the default target. For nanoda, see lean/audit/nanoda/README.md.
+
+The GitHub Actions workflow runs quick graph checks and regression tests for failed checks, generator writes and audit coverage. It does not rerun the exhaustive graph search or the memory-intensive Lean/nanoda proof checks.
 
 ## Layout
 
@@ -80,7 +82,7 @@ Do not start with a bare `lake build RamseyIncrement.R1212.Main`: Lake would com
 
 ## Credits
 
-- **Milos Tatarevic**: the two-parameter increment R(k+1, s+1) ≥ R(k,s) + 2k + 2s, its Lean formalization and the build setup ([repository](https://github.com/milostatarevic/ramsey-increment-theorem), MIT license). Everything under lean/ except ThirdConnector/, R1212/ and audit/ is his work, copied unchanged from commit 36c15ec; see [UPSTREAM.md](UPSTREAM.md).
+- **Milos Tatarevic**: the two-parameter increment R(k+1, s+1) ≥ R(k,s) + 2k + 2s, its Lean formalization and the build setup ([repository](https://github.com/milostatarevic/ramsey-increment-theorem), MIT license). His 43 mathematical modules are unchanged from commit 36c15ec. The library entry point and default axiom audit were extended to include the new theorem; see [UPSTREAM.md](UPSTREAM.md).
 - **New in this repository**: the rule R*, its proof and its Lean formalization; the Lean proof of R(12,12) ≥ 1642; the colouring; the checks in verify/.
 - The (11,11)-colouring M(797) is due to Mathon (1987) and Shearer (1986).
 - **Author**: Yue Ma. For the role of AI, see [How this work was done](#how-this-work-was-done).

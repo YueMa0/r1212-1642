@@ -6,11 +6,24 @@ Every switch is applied only after asserting the source colour the report states
 usage: python3.14 -I rebuild_from_report.py CANDIDATE_GRAPH OUT_GRAPH
 """
 import hashlib
+from pathlib import Path
 import sys
 
 import numpy as np
 
+
+def require(ok, message):
+    if not ok:
+        raise SystemExit(f"CHECK FAILED: {message}")
+
+
 cand_path, out_path = sys.argv[1], sys.argv[2]
+candidate, output = Path(cand_path), Path(out_path)
+require(candidate.resolve(strict=True) != output.resolve()
+        and not (output.exists() and candidate.samefile(output)),
+        "candidate and output must be different files")
+# Read the candidate before producing any output; never compare against our own write.
+raw = candidate.read_bytes()
 q, k, s = 797, 11, 11
 R, Bl = 1, 0
 
@@ -51,7 +64,7 @@ def setc(p, t, c):
 
 
 def switch(p, t, src, dst):
-    assert O[p, t] == src, f"switch {p}-{t}: expected source colour {src}, found {O[p, t]}"
+    require(O[p, t] == src, f"switch {p}-{t}: expected source colour {src}, found {O[p, t]}")
     setc(p, t, dst)
 
 
@@ -59,10 +72,10 @@ beta = [{p for p in range(k - 1) if G[C[p], I[t]] == Bl} for t in range(s - 1)]
 P = beta[0]
 T = {t for t in range(s - 1) if G[C[0], I[t]] == R}
 Q = set(range(2, k - 1)) - P
-assert G[C[0], I[0]] == R and G[C[1], I[0]] == R and P and 2 in P and P <= set(range(2, k - 1))
-assert all(bt != {1} for bt in beta)
-assert P == {2} and any(G[C[2], I[r]] == R for r in range(2, s - 1))   # (P1), (P2)
-assert 0 in T
+require(G[C[0], I[0]] == R and G[C[1], I[0]] == R and P and 2 in P and P <= set(range(2, k - 1)), "Type A")
+require(all(bt != {1} for bt in beta), "Type A beta condition")
+require(P == {2} and any(G[C[2], I[r]] == R for r in range(2, s - 1)), "(P1), (P2)")
+require(0 in T, "0 not in T")
 
 # --- Stage 1 (first lift)
 for p in range(k - 1):
@@ -81,7 +94,7 @@ for p in range(k - 1):
         setc(a[p2], b[p], Bl if p2 == p else R)
 L = V + a + b
 J = I + [a[0]]
-assert len(J) == s
+require(len(J) == s, "wrong certificate size")
 
 # --- Stage 2 (complementary lift)
 yblk = lambda r: 0 if r in (0, 1) else 1
@@ -126,12 +139,12 @@ for v in V:
 blue_w = {a[2], b[0], b[1], *[b[p] for p in P], *x[:s - 1],
           *[y[t] for t in range(s - 1) if t not in (0, 2)]}
 red_w = {*[a[p] for p in range(k - 1) if p != 2], *[b[p] for p in Q], x[star], y[0], y[2], y[star], z}
-assert not blue_w & red_w and len(blue_w | red_w) == 2 * (k - 1) + 2 * s + 1
+require(not blue_w & red_w and len(blue_w | red_w) == 2 * (k - 1) + 2 * s + 1, "connector w colour table")
 for v in blue_w:
     setc(w, v, Bl)
 for v in red_w:
     setc(w, v, R)
-assert (O[:N - 1, :N - 1][~np.eye(N - 1, dtype=bool)] != 255).all()   # H+ is fully coloured
+require((O[:N - 1, :N - 1][~np.eye(N - 1, dtype=bool)] != 255).all(), "H+ is not fully coloured")
 
 # --- Section 2: rule R*
 switch(C[2], x[0], R, Bl)
@@ -141,7 +154,7 @@ for p in range(1, k - 1, 2):
 red_u = {*C, I[0], *[a[p] for p in range(0, k - 1, 2)], *[b[p] for p in range(k - 1) if p != 2],
          x[0], x[star], y[star]}
 blue_u = {*I[1:], *[a[p] for p in range(1, k - 1, 2)], b[2], *x[1:s - 1], *y[:s - 1], z, w}
-assert not red_u & blue_u and len(red_u | blue_u) == len(VC) + 2 * (k - 1) + 2 * s + 2
+require(not red_u & blue_u and len(red_u | blue_u) == len(VC) + 2 * (k - 1) + 2 * s + 2, "connector u colour table")
 for v in red_u:
     setc(u, v, R)
 for v in blue_u:
@@ -149,17 +162,21 @@ for v in blue_u:
 for v in V0:
     setc(u, v, G[I[0], v])
 np.fill_diagonal(O, 0)
-assert (O != 255).all()
+require((O != 255).all(), "uncoloured entries")
 
 data = b"".join(bytes(row + 48) + b"\n" for row in O)
-open(out_path, "wb").write(data)
 mine = hashlib.sha256(data).hexdigest()
-raw = open(cand_path, "rb").read()
-F = np.array([np.frombuffer(l, dtype=np.uint8) - 48 for l in raw.split(b"\n")[:-1]], dtype=np.uint8)
+lines = raw.split(b"\n")
+if (len(lines) != N + 1 or lines[-1] != b""
+        or any(len(row) != N or set(row) - {48, 49} for row in lines[:-1])):
+    raise SystemExit("CHECK FAILED: candidate must contain 1641 binary LF-terminated rows")
+F = np.array([np.frombuffer(l, dtype=np.uint8) - 48 for l in lines[:-1]], dtype=np.uint8)
+output.write_bytes(data)
 diff = np.argwhere(np.triu(F != O, 1))
 print("rebuilt sha256  ", mine)
 print("candidate sha256", hashlib.sha256(raw).hexdigest())
-print("identical:", mine == hashlib.sha256(raw).hexdigest(), "| differing pairs:", len(diff))
+identical = data == raw
+print("identical:", identical, "| differing pairs:", len(diff))
 names = {**{v: f"c{p}" for p, v in enumerate(C)}, **{v: f"i{t}" for t, v in enumerate(I)},
          **{v: f"a{p}" for p, v in enumerate(a)}, **{v: f"b{p}" for p, v in enumerate(b)},
          **{v: (f"x{r}" if r < star else "x*") for r, v in enumerate(x)},
@@ -167,3 +184,5 @@ names = {**{v: f"c{p}" for p, v in enumerate(C)}, **{v: f"i{t}" for t, v in enum
 for p_, t_ in diff[:20]:
     print("  differs:", names.get(int(p_), p_), names.get(int(t_), t_), "file", F[p_, t_], "rebuilt", O[p_, t_])
 print("T =", sorted(T), "| P =", sorted(P), "| Q =", sorted(Q))
+print("RESULT:", "PASS" if identical else "FAIL")
+sys.exit(0 if identical else 1)
