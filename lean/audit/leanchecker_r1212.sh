@@ -1,28 +1,42 @@
 #!/usr/bin/env bash
-# Replay the new modules (ThirdConnector and R1212) through leanchecker, one module per run.
+# Replay the new modules (ThirdConnector and R1212) through leanchecker.
+#
+# usage: leanchecker_r1212.sh [-j JOBS]
 #
 # leanchecker replays all modules it is given in parallel, and each H01Branch module
-# needs 4-7 GB, so passing them together can exhaust memory.
+# needs up to about 7 GB. So the eight branch modules are replayed JOBS per run, with
+# JOBS chosen as in build_r1212.sh, and the other modules one per run.
 set -uo pipefail
 cd "$(dirname "$0")/.."
+. audit/jobs.sh
+njobs=$(r1212_jobs "$@") || exit 2
 
-modules=(
-  ThirdConnector.Construction ThirdConnector.ColourTable ThirdConnector.BlueEdges
-  ThirdConnector.RedEdges ThirdConnector.Projection ThirdConnector.BlueU ThirdConnector.RedU
-  ThirdConnector.Theorem
-  R1212.Paley R1212.Search R1212.H01Data
-  R1212.H01Branch0 R1212.H01Branch1 R1212.H01Branch2 R1212.H01Branch3
-  R1212.H01Branch4 R1212.H01Branch5 R1212.H01Branch6 R1212.H01Branch7
-  R1212.H01NoK8 R1212.PaleyClique R1212.Mathon R1212.Main
-)
 status=0
-for m in "${modules[@]}"; do
-  if lake env leanchecker "RamseyIncrement.$m"; then
-    echo "ok    RamseyIncrement.$m"
+replay() {
+  if lake env leanchecker "$@"; then
+    echo "ok    $*"
   else
-    echo "FAIL  RamseyIncrement.$m"
+    echo "FAIL  $*"
     status=1
   fi
+}
+
+for m in ThirdConnector.Construction ThirdConnector.ColourTable ThirdConnector.BlueEdges \
+    ThirdConnector.RedEdges ThirdConnector.Projection ThirdConnector.BlueU ThirdConnector.RedU \
+    ThirdConnector.Theorem R1212.Paley R1212.Search R1212.H01Data; do
+  replay "RamseyIncrement.$m"
+done
+i=0
+while [ "$i" -lt 8 ]; do
+  batch=()
+  while [ "$i" -lt 8 ] && [ "${#batch[@]}" -lt "$njobs" ]; do
+    batch+=("RamseyIncrement.R1212.H01Branch$i")
+    i=$((i + 1))
+  done
+  replay "${batch[@]}"
+done
+for m in R1212.H01NoK8 R1212.PaleyClique R1212.Mathon R1212.Main; do
+  replay "RamseyIncrement.$m"
 done
 # Control: a module that does not exist must be rejected.
 if lake env leanchecker RamseyIncrement.R1212.NoSuchModule > /dev/null 2>&1; then

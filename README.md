@@ -65,7 +65,12 @@ lean/audit/leanchecker_r1212.sh
 lean/audit/leanchecker_upstream.sh
 ```
 
-The default `lake build` target now includes `RamseyIncrement.R1212.Main`, and `AxiomAudit.lean` also prints the axioms of the final lower-bound theorem. On a fresh checkout, use the build script above instead of a bare `lake build` or `lake build RamseyIncrement.R1212.Main`: Lake would compile the eight H01Branch modules in parallel, at 4–7 GB each. The script builds them one at a time before building the default target. For nanoda, see lean/audit/nanoda/README.md.
+The default `lake build` target now includes `RamseyIncrement.R1212.Main`, and `AxiomAudit.lean` also prints the axioms of the final lower-bound theorem. On a fresh checkout, use the build script above instead of a bare `lake build` or `lake build RamseyIncrement.R1212.Main`: Lake would compile the eight H01Branch modules in parallel, at up to 7 GB each. The script builds them in batches before building the default target, and the replay script replays them the same way.
+
+- The batch size is chosen from the physical memory, (GB − 4) / 7, between 1 and 8: 1 module at a time with 16 GB, 4 with 32 GB, all 8 with 64 GB.
+- `-j N` or `R1212_JOBS=N` sets it by hand, for example `lean/audit/build_r1212.sh -j 2`.
+
+For nanoda, see lean/audit/nanoda/README.md.
 
 The GitHub Actions workflow runs quick graph checks and regression tests for failed checks, generator writes and audit coverage. It does not rerun the exhaustive graph search or the memory-intensive Lean/nanoda proof checks.
 
