@@ -2,6 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23770924.svg)](https://doi.org/10.5281/zenodo.23770924)
 
+> **Update, 30 October 2026:** a newer colouring gives R(12,12) ≥ 1658 ([r1212-1658](https://github.com/YueMa0/r1212-1658)); it is computer-verified, but has no Lean proof.
+
 This repository contains a red/blue colouring of the complete graph K₁₆₄₁ with no monochromatic K₁₂, and a Lean 4 proof that R(12,12) ≥ 1642.
 
 To our knowledge this improves the best published lower bound, R(12,12) ≥ 1641 (M. Tatarevic, [arXiv:2608.06531](https://arxiv.org/abs/2608.06531), August 2026). The literature search was made on 29 October 2026. The result has not been peer reviewed.
